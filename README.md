@@ -1,6 +1,6 @@
 <img src="./moya-stubber.png" width="150" height="150"/>
 
-# moya-stubber: supercharged network stubbing for Moya
+# moya-stubber: supercharged stubbing for Moya
 
 Moya-stubber speeds up development and testing by adding a network stubbing screen to your app. It will:
 
