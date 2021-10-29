@@ -20,14 +20,14 @@ final class MoyaStubberTests: XCTestCase {
                 availableStubs: [
                     Stub.timeoutError,
                     Stub(
-                        displayName: "G: serverError (500)",
-                        name: "serverError.500",
-                        response: .networkResponse(500, stub("serverError.500"))
+                        displayName: "G: serverError 500 (json)",
+                        fileName: "serverError.500.json",
+                        response: .networkResponse(500, stub("serverError.500.json"))
                     ),
                     Stub(
-                        displayName: "ok (200)",
-                        name: "ok.200",
-                        response: .networkResponse(200, stub("getUser/ok.200"))
+                        displayName: "ok 200 (json)",
+                        fileName: "ok.200.json",
+                        response: .networkResponse(200, stub("getUser/ok.200.json"))
                     )
                 ]
             )
@@ -58,7 +58,7 @@ final class MoyaStubberTests: XCTestCase {
     // MARK: -
 
     func test_activateStubNamedForEndpoint_activatesTheStub() throws {
-        try stubber.activate(stubNamed: "ok.200", forEndpoint: "getUser")
+        try stubber.activate(stubNamed: "ok.200.json", forEndpoint: "getUser")
 
         let actual = stubber.activeStub(forEndpointName: "getUser")
         let expected = stubber.stubbableEndpoints[0].availableStubs[2]
@@ -117,7 +117,7 @@ final class MoyaStubberTests: XCTestCase {
     }
 
     private func stub(_ name: String) -> Data {
-        let url = bundle(named: "Stubs").url(forResource: name, withExtension: "json")!
+        let url = bundle(named: "Stubs").url(forResource: name, withExtension: nil)!
         return try! Data(contentsOf: url)
     }
 }

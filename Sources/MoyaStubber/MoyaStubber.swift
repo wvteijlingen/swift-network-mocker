@@ -35,12 +35,12 @@ public class MoyaStubber {
     /// Activate a stub with given `name` for an endpoint.
     ///
     /// - Parameters:
-    ///   - stubName: The name of the stub file, not including the file extension. For example: "ok.200"
-    ///   - endpointName: The name of the endpoint to acticate the stub for.
+    ///   - stubName: The name of the stub file. For example: "ok.200.json"
+    ///   - endpointName: The name of the endpoint to activate the stub for.
     public func activate(stubNamed name: String, forEndpoint endpointName: String) throws {
         guard let stub = stubbableEndpoints
             .first(where: { $0.name == endpointName })?
-            .availableStubs.first(where: { $0.name == name })
+            .availableStubs.first(where: { $0.fileName == name })
         else {
             throw MoyaStubberError.stubNotFound(stubName: name, endpointName: endpointName)
         }
@@ -158,8 +158,8 @@ public struct Stub {
     /// The display name of the stub.
     public let displayName: String
 
-    /// The name of the JSON file, not including the ".json" extension
-    public let name: String?
+    /// The name of the stub file.
+    public let fileName: String?
 
     let response: EndpointSampleResponse
 
@@ -177,7 +177,7 @@ public struct Stub {
 
     static let timeoutError = Self(
         displayName: "G: network timeout",
-        name: nil,
+        fileName: nil,
         response: .networkError(NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut, userInfo: nil))
     )
 }
@@ -185,7 +185,7 @@ public struct Stub {
 extension Stub: Equatable {
     public static func == (lhs: Stub, rhs: Stub) -> Bool {
         if lhs.displayName != rhs.displayName { return false }
-        if lhs.name != rhs.name { return false }
+        if lhs.fileName != rhs.fileName { return false }
 
         switch(lhs.response, rhs.response) {
         case let (.networkResponse(lhsStatusCode, lhsData), .networkResponse(rhsStatusCode, rhsData)):
@@ -220,18 +220,19 @@ extension MoyaStubber {
         fromDirectory sourceDirectory: URL
     ) throws -> [(name: String, directory: URL)] {
         try FileManager.default.shallowEnumerator(at: sourceDirectory)
-            .filter { $0.isDirectory }
+            .filter(\.isDirectory)
             .map { (name: $0.lastPathComponent, directory: $0) }
     }
 
     private static func discoverStubs(fromDirectory sourceDirectory: URL, isGeneric: Bool) throws -> [Stub] {
         try FileManager.default.shallowEnumerator(at: sourceDirectory)
-            .filter { $0.isFile && $0.pathExtension == "json" }
+            .filter(\.isFile)
             .map { fileURL in
                 let fileNameParts = fileURL.lastPathComponent.split(separator: ("."))
+                let fileExtension = fileURL.pathExtension
 
                 guard let statusCode = fileNameParts[safe: 1].flatMap({ Int($0) }),
-                      let name = fileNameParts[safe: 0].map({ "\($0) (\(statusCode))" })
+                      let name = fileNameParts[safe: 0].map({ "\($0) \(statusCode) (\(fileExtension))" })
                 else {
                     throw MoyaStubberError.invalidFileName(url: fileURL)
                 }
@@ -242,7 +243,7 @@ extension MoyaStubber {
 
                 return Stub(
                     displayName: isGeneric ? "G: \(name)" : name,
-                    name: fileURL.deletingPathExtension().lastPathComponent,
+                    fileName: fileURL.lastPathComponent,
                     response: .networkResponse(statusCode, data)
                 )
             }
@@ -295,7 +296,7 @@ enum MoyaStubberError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidFileName(let url):
-            return "The file \(url) does not match expected filename '[stub].[statusCode].json'"
+            return "The file \(url) does not match expected filename '[stub].[statusCode].[extension]'"
         case .couldNotEnumerate(let url):
             return "The directory \(url) could not be enumerated."
         case .couldNotLoadFile(let url):

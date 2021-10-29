@@ -6,7 +6,7 @@ Moya-stubber speeds up development and testing by adding a network stubbing scre
 
 - Provide a view controller to activate and deactivate stubs at runtime.
 - Allow you to configure multiple stubbed responses per endpoint, so you can easilty test your code in multiple scenarios.
-- Use regular JSON files for stubbed responses.
+- Use regular files for stubbed responses (json, xml, or any other filetype).
 - Define a clear hierarchical structure for your stubs.
 
 ## Installation
@@ -56,7 +56,7 @@ MoyaStubber expects the Stubs.bundle to have the following structure:
 
 1. Every endpoint that you want to stub must be a subdirectory of the bundle.
    Its name must match a case in your `Moya.TargetType` enum.
-1. Within each endpoint directory you can place multiple stubs with the following naming pattern `name.statusCode.json`.
+1. Within each endpoint directory you can place multiple stubs with the following naming pattern `[name].[statusCode].[extension]`.
 1. Stubs that are placed in the root of the bundle will be available to all endpoints.
    You can use this for generic responses such as internal server errors.
 
@@ -67,11 +67,12 @@ If your Moya target looks like this…
 ```swift
 enum MyMoyaTarget: TargetType {
   case getUser
+  case getUserAvatar
   case deleteUser
 }
 ```
 
-…your stubs bundle should be structured like this:
+…your stubs bundle can be structured like this:
 
 ```
 Stubs.bundle
@@ -80,6 +81,9 @@ Stubs.bundle
   |
   | getUser
   |   | ok.200.json
+  |
+  | getUserAvatar
+  |   | ok.200.jpg
   |
   | deleteUser
   |   | ok.204.json
