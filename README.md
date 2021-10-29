@@ -1,10 +1,11 @@
-# moya-stubber
+# moya-stubber: supercharged network stubbing for Moya
 
-Moya-stubber helps you stubs your Moya network requests with ease. It will:
+Moya-stubber speeds up development and testing by adding a network stubbing screen to your app. It will:
 
-- Allow you to use regular JSON files for stubbed responses.
-- Use a clear hierarchical structure for your stubs.
 - Provide a view controller to activate and deactivate stubs at runtime.
+- Allow you to configure multiple stubbed responses per endpoint, so you can easilty test your code in multiple scenarios.
+- Use regular JSON files for stubbed responses.
+- Define a clear hierarchical structure for your stubs.
 
 ## Installation
 
