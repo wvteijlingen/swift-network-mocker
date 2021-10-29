@@ -1,3 +1,5 @@
+<img src="./moya-stubber.png" width="150" height="150"/>
+
 # moya-stubber: supercharged network stubbing for Moya
 
 Moya-stubber speeds up development and testing by adding a network stubbing screen to your app. It will:
@@ -16,6 +18,7 @@ Moya-stubber speeds up development and testing by adding a network stubbing scre
 ```
 
 **CocoaPods**
+
 ```
 pod "moya-stubber", :git => "https://github.com/wvteijlingen/moya-stubber.git"
 ```
@@ -41,12 +44,14 @@ MoyaProvider(
 ```
 
 3. Add the stubbing view controller:
+
 ```swift
 let viewController = MoyaStubberViewController(stubber: MoyaStubber.shared)
 navigationController.pushViewController(viewController, animated: true)
 ```
 
 ## Stubs bundle file structure
+
 MoyaStubber expects the Stubs.bundle to have the following structure:
 
 1. Every endpoint that you want to stub must be a subdirectory of the bundle.
