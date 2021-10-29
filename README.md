@@ -109,6 +109,6 @@ fi
 You can also enable or disable stubs programatically:
 
 ```swift
-stubber.activate(stubNamed: "ok.200", forEndpoint: "getUser")
+stubber.activate(stubNamed: "ok.200.json", forEndpoint: "getUser")
 stubber.deactivateStub(forEndpoint: "getUser")
 ```
