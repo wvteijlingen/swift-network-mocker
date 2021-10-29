@@ -13,13 +13,13 @@ Moya-stubber speeds up development and testing by adding a network stubbing scre
 
 **Swift Package Manager**
 
-```
+```swift
 .package(url: "https://github.com/wvteijlingen/moya-stubber.git", .upToNextMajor(from: "0.1.0"))
 ```
 
 **CocoaPods**
 
-```
+```ruby
 pod "moya-stubber", :git => "https://github.com/wvteijlingen/moya-stubber.git"
 ```
 
