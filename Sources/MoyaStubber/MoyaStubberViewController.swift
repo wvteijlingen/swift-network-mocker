@@ -2,7 +2,7 @@
 
 import UIKit
 
-class MoyaStubberViewController: UITableViewController {
+public class MoyaStubberViewController: UITableViewController {
     private let stubber: MoyaStubber
 
     init(stubber: MoyaStubber) {
@@ -15,7 +15,7 @@ class MoyaStubberViewController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.register(DetailLabelCell.self, forCellReuseIdentifier: "DetailLabelCell")
@@ -33,7 +33,7 @@ class MoyaStubberViewController: UITableViewController {
         tableView.reloadData()
     }
 
-    private func showStubPicker(forEndpointName endpointName: String, availableStubs: [MoyaStubber.Stub]) {
+    private func showStubPicker(forEndpointName endpointName: String, availableStubs: [Stub]) {
         let alert = UIAlertController(title: endpointName, message: nil, preferredStyle: .actionSheet)
 
         for stub in availableStubs {
@@ -73,19 +73,19 @@ class MoyaStubberViewController: UITableViewController {
 // MARK: - UITableViewDataSource
 
 extension MoyaStubberViewController {
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    public override func numberOfSections(in tableView: UITableView) -> Int {
         2
     }
 
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    public override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         section == 0 ? nil : "Stubs"
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         section == 0 ? 1 : stubber.stubbableEndpoints.count
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "DetailLabelCell") as? DetailLabelCell else {
             fatalError("Could not dequeue cell")
         }
@@ -105,7 +105,7 @@ extension MoyaStubberViewController {
 // MARK: - UITableViewDelegate
 
 extension MoyaStubberViewController {
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             showDelayPicker()
         } else {
@@ -131,7 +131,7 @@ private class DetailLabelCell: UITableViewCell {
         backgroundColor = .white
     }
 
-    func configure(forStub stub: MoyaStubber.Stub?, endpointName: String) {
+    func configure(forStub stub: Stub?, endpointName: String) {
         textLabel?.text = endpointName
         detailTextLabel?.text = stub?.displayName
 
