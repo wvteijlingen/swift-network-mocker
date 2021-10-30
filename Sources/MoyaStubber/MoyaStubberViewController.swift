@@ -11,7 +11,7 @@ public class MoyaStubberViewController: UITableViewController {
         self.title = "Network Stubbing"
     }
 
-    required public init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
