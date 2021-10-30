@@ -5,13 +5,13 @@ import UIKit
 public class MoyaStubberViewController: UITableViewController {
     private let stubber: MoyaStubber
 
-    init(stubber: MoyaStubber) {
+    public init(stubber: MoyaStubber) {
         self.stubber = stubber
         super.init(style: .grouped)
         self.title = "Network Stubbing"
     }
 
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
