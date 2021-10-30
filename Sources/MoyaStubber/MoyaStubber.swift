@@ -54,8 +54,14 @@ public class MoyaStubber {
         activeStubs[endpointName] = nil
     }
 
+    /// Deactivates all stubbing, and sets the delay to 0.
+    public func reset() {
+        delay = 0
+        activeStubs = [:]
+    }
+
     /// Returns the active stub for the given `endpointName`, or nil if no stub is active for that endpoint.
-    public func activeStub(forEndpointName endpointName: String) -> Stub? {
+    func activeStub(forEndpointName endpointName: String) -> Stub? {
         activeStubs[endpointName]
     }
 
@@ -64,20 +70,13 @@ public class MoyaStubber {
     /// - Parameters:
     ///   - stub: The stub to activate.
     ///   - endpointName: The endpoint to stub.
-    public func activate(stub: Stub?, forEndpoint endpointName: String) {
+    func activate(stub: Stub?, forEndpoint endpointName: String) {
         guard let stub = stub else {
             activeStubs[endpointName] = nil
             return
         }
 
         activeStubs[endpointName] = stub
-    }
-
-
-    /// Deactivates all stubbing, and sets the delay to 0.
-    public func reset() {
-        delay = 0
-        activeStubs = [:]
     }
 
     func activeStub(for target: TargetType) -> Stub? {
@@ -148,18 +147,18 @@ extension MoyaStubber {
 // MARK: - Models
 
 /// An endpoint for which stubs exist in the stubs bundle.
-public struct StubbableEndpoint: Equatable {
+struct StubbableEndpoint: Equatable {
     let name: String
     let availableStubs: [Stub]
 }
 
 /// A stub that exists in the stubs bundle.
-public struct Stub {
+struct Stub {
     /// The display name of the stub.
-    public let displayName: String
+    let displayName: String
 
     /// The name of the stub file.
-    public let fileName: String?
+    let fileName: String?
 
     let response: EndpointSampleResponse
 
@@ -183,7 +182,7 @@ public struct Stub {
 }
 
 extension Stub: Equatable {
-    public static func == (lhs: Stub, rhs: Stub) -> Bool {
+    static func == (lhs: Stub, rhs: Stub) -> Bool {
         if lhs.displayName != rhs.displayName { return false }
         if lhs.fileName != rhs.fileName { return false }
 
