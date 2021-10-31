@@ -4,7 +4,7 @@
 
 Moya-stubber speeds up development and testing by adding a network stubbing screen to your app.
 
-Want to add a stub response? It's as easy as creating a new JSON file in a your repository. Moya Stubber will automatically find it and make it activatable for stubbing.
+Want to add a stub response? It's as easy as creating a new JSON file in your project repository. Moya Stubber will automatically find it and make it activatable for stubbing.
 
 Moya Stubber will:
 
