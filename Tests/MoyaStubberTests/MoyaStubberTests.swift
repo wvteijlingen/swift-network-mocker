@@ -18,15 +18,15 @@ final class MoyaStubberTests: XCTestCase {
             StubbableEndpoint(
                 name: "getUser",
                 availableStubs: [
-                    Stub.timeoutError,
                     Stub(
-                        name: "serverError",
+                        name: "ServerError",
                         fileName: "serverError.500.json",
                         isGeneric: true,
                         response: .networkResponse(500, stub("serverError.500.json"))
                     ),
+                    Stub.timeoutError,
                     Stub(
-                        name: "ok",
+                        name: "Ok",
                         fileName: "ok.200.json",
                         isGeneric: false,
                         response: .networkResponse(200, stub("getUser/ok.200.json"))
@@ -60,7 +60,7 @@ final class MoyaStubberTests: XCTestCase {
     // MARK: -
 
     func test_activateStubNamedForEndpoint_activatesTheStub() throws {
-        try stubber.activate(stubNamed: "forEndpointNamed.200.json", forEndpoint: "getUser")
+        try stubber.activate(stubNamed: "ok.200.json", forEndpoint: "getUser")
 
         let actual = stubber.activeStub(forEndpointNamed: "getUser")
         let expected = stubber.stubbableEndpoints[0].availableStubs[2]
