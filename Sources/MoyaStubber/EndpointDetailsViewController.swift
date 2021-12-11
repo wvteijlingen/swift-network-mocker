@@ -57,29 +57,29 @@ extension EndpointDetailsViewController {
   }
 
   public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell: UITableViewCell
+    let stub: Stub?
 
     switch indexPath.section {
     case 0:
-      cell = tableView.dequeueReusableCell(withIdentifier: "DestructiveCell") as! DestructiveCell
-      cell.textLabel?.text = "No stubbing"
-
+      stub = nil
     case 1:
-      cell = tableView.dequeueReusableCell(withIdentifier: "DetailLabelCell") as! DetailLabelCell
-      let stub = customizedStubs[indexPath.row]
-      cell.textLabel?.text = stub.name
-      cell.detailTextLabel?.text = stub.statusCode.map { String($0) }
-      cell.isSelected = stubber.activeStub(forEndpointNamed: endpoint.name) == stub
-
+      stub = customizedStubs[indexPath.row]
     case 2:
-      cell = tableView.dequeueReusableCell(withIdentifier: "DetailLabelCell") as! DetailLabelCell
-      let stub = genericStubs[indexPath.row]
-      cell.textLabel?.text = stub.name
-      cell.detailTextLabel?.text = stub.statusCode.map { String($0) }
-      cell.isSelected = stubber.activeStub(forEndpointNamed: endpoint.name) == stub
-
+      stub = genericStubs[indexPath.row]
     default:
       fatalError("Invalid section \(indexPath.section)")
+    }
+
+    let cell = tableView.dequeueReusableCell(withIdentifier: "DetailLabelCell") as! DetailLabelCell
+
+    if let stub = stub {
+      cell.textLabel?.text = stub.name
+      cell.detailTextLabel?.text = stub.statusCode.map { String($0) }
+      cell.isSelected = stubber.activeStub(forEndpointNamed: endpoint.name) == stub
+      cell.accessoryType = stubber.activeStub(forEndpointNamed: endpoint.name) == stub ? .checkmark : .none
+    } else {
+      cell.textLabel?.text = "No stubbing"
+      cell.accessoryType = stubber.activeStub(forEndpointNamed: endpoint.name) == nil ? .checkmark : .none
     }
 
     return cell

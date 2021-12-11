@@ -14,6 +14,9 @@ class DetailLabelCell: UITableViewCell {
 
   override func prepareForReuse() {
     super.prepareForReuse()
+    textLabel?.text = nil
+    detailTextLabel?.text = nil
+    accessoryType = .none
   }
 }
 
@@ -29,7 +32,10 @@ class DestructiveCell: UITableViewCell {
 
   override func prepareForReuse() {
     super.prepareForReuse()
+    textLabel?.text = nil
     textLabel?.textColor = .systemRed
+    detailTextLabel?.text = nil
+    accessoryType = .none
   }
 }
 

@@ -20,12 +20,10 @@ class EndpointsViewController: UITableViewController {
 
     tableView.register(DetailLabelCell.self, forCellReuseIdentifier: "DetailLabelCell")
 
-    navigationItem.rightBarButtonItem = UIBarButtonItem(
-      title: "Reset",
-      style: .plain,
-      target: self,
-      action: #selector(didTapReset)
-    )
+    let resetButton = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(didTapReset))
+    resetButton.tintColor = .systemRed
+
+    navigationItem.rightBarButtonItem = resetButton
   }
 
   public override func viewWillAppear(_ animated: Bool) {
@@ -79,6 +77,8 @@ extension EndpointsViewController {
     } else {
       let endpointName = stubber.stubbableEndpoints[indexPath.row].name
       cell.textLabel?.text = endpointName
+      cell.detailTextLabel?.text = stubber.activeStub(forEndpointNamed: endpointName)?.name
+      cell.accessoryType = .disclosureIndicator
     }
 
     return cell

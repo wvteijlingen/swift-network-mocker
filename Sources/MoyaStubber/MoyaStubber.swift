@@ -4,7 +4,10 @@ import Moya
 public class MoyaStubber {
   /// The shared network stubber.
   ///
-  /// By default this stubber does not contain any stubs. You must call `setStubsBundle` to load stubs.
+  /// When you only have a single Moya provider, you can use this shared stubber. If you want to stub multiple
+  /// Moya providers, you can create separate stubbers using `MoyaStubber.init(stubsBundle:)`.
+  ///
+  /// By default the shared stubber does not contain any stubs. You must call `setStubsBundle` once before using it.
   public static let shared = MoyaStubber()
 
   /// The simulated network delay that is applied to all activated stubs.
@@ -153,7 +156,7 @@ private func loadStubsBundle(_ bundle: Bundle) throws -> [StubbableEndpoint] {
 
   return try endpoints.map {
     let endpointStubs = try discoverStubs(fromDirectory: $0.directory, isGeneric: false)
-    return StubbableEndpoint(name: $0.name, availableStubs: builtInStubs + genericStubs + endpointStubs)
+    return StubbableEndpoint(name: $0.name, availableStubs: genericStubs + builtInStubs + endpointStubs)
   }
 }
 
@@ -168,10 +171,9 @@ private func discoverStubs(fromDirectory sourceDirectory: URL, isGeneric: Bool) 
     .filter(\.isFile)
     .map { fileURL in
       let fileNameParts = fileURL.lastPathComponent.split(separator: ("."))
-      let fileExtension = fileURL.pathExtension
 
       guard let statusCode = fileNameParts[safe: 1].flatMap({ Int($0) }),
-            let name = fileNameParts[safe: 0].map({ "\($0) \(statusCode) (\(fileExtension))" })
+            let name = fileNameParts[safe: 0].flatMap({ String($0) })
       else {
         throw MoyaStubberError.invalidFileName(url: fileURL)
       }
@@ -181,7 +183,7 @@ private func discoverStubs(fromDirectory sourceDirectory: URL, isGeneric: Bool) 
       }
 
       return Stub(
-        name: name,
+        name: name.capitalizedFirst(),
         fileName: fileURL.lastPathComponent,
         isGeneric: isGeneric,
         response: .networkResponse(statusCode, data)

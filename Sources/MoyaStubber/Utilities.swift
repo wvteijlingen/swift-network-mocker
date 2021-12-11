@@ -34,3 +34,9 @@ extension Array {
     indices.contains(index) ? self[index] : nil
   }
 }
+
+extension String {
+  func capitalizedFirst() -> String {
+    return prefix(1).capitalized + dropFirst()
+  }
+}
