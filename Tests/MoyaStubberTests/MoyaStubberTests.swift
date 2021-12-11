@@ -20,13 +20,15 @@ final class MoyaStubberTests: XCTestCase {
                 availableStubs: [
                     Stub.timeoutError,
                     Stub(
-                        displayName: "G: serverError 500 (json)",
+                        name: "serverError",
                         fileName: "serverError.500.json",
+                        isGeneric: true,
                         response: .networkResponse(500, stub("serverError.500.json"))
                     ),
                     Stub(
-                        displayName: "ok 200 (json)",
+                        name: "ok",
                         fileName: "ok.200.json",
+                        isGeneric: false,
                         response: .networkResponse(200, stub("getUser/ok.200.json"))
                     )
                 ]
@@ -40,27 +42,27 @@ final class MoyaStubberTests: XCTestCase {
 
     func test_activateStubForEndpoint_whenPassingStub_activatesTheStub() {
         let stub = stubber.stubbableEndpoints[0].availableStubs[0]
-        stubber.activate(stub: stub, forEndpoint: "getUser")
+        stubber.activate(stub: stub, forEndpointNamed: "getUser")
 
-        let actual = stubber.activeStub(forEndpointName: "getUser")
+        let actual = stubber.activeStub(forEndpointNamed: "getUser")
         XCTAssertEqual(actual, stub)
     }
 
     func test_activateStubForEndpoint_whenPassingNil_deactivatesTheStub() {
         let stub = stubber.stubbableEndpoints[0].availableStubs[0]
-        stubber.activate(stub: stub, forEndpoint: "getUser")
-        stubber.activate(stub: nil, forEndpoint: "getUser")
+        stubber.activate(stub: stub, forEndpointNamed: "getUser")
+        stubber.activate(stub: nil, forEndpointNamed: "getUser")
 
-        let actual = stubber.activeStub(forEndpointName: "getUser")
+        let actual = stubber.activeStub(forEndpointNamed: "getUser")
         XCTAssertNil(actual)
     }
 
     // MARK: -
 
     func test_activateStubNamedForEndpoint_activatesTheStub() throws {
-        try stubber.activate(stubNamed: "ok.200.json", forEndpoint: "getUser")
+        try stubber.activate(stubNamed: "forEndpointNamed.200.json", forEndpoint: "getUser")
 
-        let actual = stubber.activeStub(forEndpointName: "getUser")
+        let actual = stubber.activeStub(forEndpointNamed: "getUser")
         let expected = stubber.stubbableEndpoints[0].availableStubs[2]
         XCTAssertEqual(actual, expected)
     }
@@ -69,10 +71,10 @@ final class MoyaStubberTests: XCTestCase {
 
     func test_deactivateStubForEndpoint_whenPassingNil_deactivatesTheStub() {
         let stub = stubber.stubbableEndpoints[0].availableStubs[0]
-        stubber.activate(stub: stub, forEndpoint: "getUser")
+        stubber.activate(stub: stub, forEndpointNamed: "getUser")
         stubber.deactivateStub(forEndpoint: "getUser")
 
-        let actual = stubber.activeStub(forEndpointName: "getUser")
+        let actual = stubber.activeStub(forEndpointNamed: "getUser")
         XCTAssertNil(actual)
     }
 
@@ -80,11 +82,11 @@ final class MoyaStubberTests: XCTestCase {
     
     func test_setStubsBundle_clearsActiveStubs() {
         let stub = stubber.stubbableEndpoints[0].availableStubs[0]
-        stubber.activate(stub: stub, forEndpoint: "getUser")
+        stubber.activate(stub: stub, forEndpointNamed: "getUser")
 
         try! stubber.setStubsBundle(bundle(named: "EmptyBundle"))
 
-        let actual = stubber.activeStub(forEndpointName: "getUser")
+        let actual = stubber.activeStub(forEndpointNamed: "getUser")
         XCTAssertNil(actual)
     }
 
@@ -92,7 +94,7 @@ final class MoyaStubberTests: XCTestCase {
 
     func test_activeStubForTarget_forStubbableEndpoint_returnsActiveStub() {
         let stub = stubber.stubbableEndpoints[0].availableStubs[0]
-        stubber.activate(stub: stub, forEndpoint: "getUser")
+        stubber.activate(stub: stub, forEndpointNamed: "getUser")
 
         let actual = stubber.activeStub(for: TestMoyaTarget.getUser(id: 1))
         XCTAssertEqual(actual, stub)
