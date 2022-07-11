@@ -4,23 +4,19 @@
 import PackageDescription
 
 let package = Package(
-    name: "moya-stubber",
+    name: "swift-network-mocker",
     platforms: [
-        .macOS("10.12"),
-        .iOS(.v10)
+        .iOS(.v15)
     ],
     products: [
-        .library(name: "MoyaStubber", type: nil, targets: ["MoyaStubber"])
-    ],
-    dependencies: [
-        .package(url: "https://github.com/Moya/Moya.git", .upToNextMajor(from: "15.0.0"))
+        .library(name: "NetworkMocker", type: nil, targets: ["NetworkMocker"])
     ],
     targets: [
-        .target(name: "MoyaStubber", dependencies: ["Moya"]),
+        .target(name: "NetworkMocker"),
         .testTarget(
-            name: "MoyaStubberTests",
-            dependencies: ["MoyaStubber"],
-            resources: [.copy("Stubs.bundle"), .copy("EmptyBundle.bundle")]
+            name: "NetworkMockerTests",
+            dependencies: ["NetworkMocker"],
+            resources: [.copy("EmptyBundle.bundle"), .copy("Mocks.bundle")]
         )
     ]
 )
