@@ -1,6 +1,6 @@
 <img src="./swift-network-mocker.png" width="150" height="150"/>
 
-# swift-network-mocker: supercharged stubbing for Moya
+# swift-network-mocker: network mocking for Swift
 
 Swift Network Mocker speeds up development and testing by adding a network mockbing screen to your app.
 
