@@ -6,7 +6,7 @@ struct MocksBundle {
     
     init(bundle: Bundle, baseURL: String) {
         self.bundle = bundle
-        self.baseURL = baseURL
+        self.baseURL = "/" + baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
     }
     
     func discoverMocks() throws -> [Endpoint] {
@@ -33,7 +33,11 @@ struct MocksBundle {
         root: URL,
         genericMocks: [Mock]
     ) throws -> [Endpoint] {
-        let path = [baseURL, directory.path.replacingOccurrences(of: root.path, with: "")].joined()
+        let path = [
+            baseURL,
+            directory.path.components(separatedBy: root.path)[1].trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        ].joined(separator: "/")
+
         let mocks = try discoverMocks(fromDirectory: directory, isGeneric: false)
 
         var discoveredEndpoints = Dictionary(grouping: mocks) {
