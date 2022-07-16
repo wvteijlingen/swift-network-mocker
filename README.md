@@ -61,6 +61,17 @@ Swift Network Mocker expects the Mocks bundle to have the following structure:
 Some mocks are applicable to all endpoints, for example a generic mock for a server error. Instead of duplicating such mocks in your bundle, you can place these in the `generic` folder. These mocks will then be made available for all known endpoints.
 
 ### Example
+If your URL structure looks like this:
+
+```
+GET example.com/users
+GET example.com/users/{id}
+GET example.com/users/{id}/posts
+POST example.com/users/{id}/posts
+```
+
+Your mocks bundle should look like this:
+
 ```
 Mocks.bundle
   | generic
