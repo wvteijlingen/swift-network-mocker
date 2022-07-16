@@ -53,11 +53,12 @@ NavigationLink("Mocking", destination: NetworkMocker.EndpointsView())
 
 Swift Network Mocker expects the Mocks bundle to have the following structure:
 
-1. Mock files must be named according to this pattern: `[method].[name].[statusCode].json. For example: `get.ok.200.json` is a mock for a get request returning an 200 status code. You can use the method `any` to make the mock available for any request method.
+1. Mock files must be named according to this pattern: `[method].[name].[statusCode].json.` For example: `get.ok.200.json` is a mock for a get request returning an 200 status code. You can use the method `any` to make the mock available for any request method (e.g. `any.ok.200.json`).
 1. Mock files must be placed in directories matching the URL structure of your API. For example: `Mocks.bundle/endpoints/users/{id}/posts` will match `https://example.com/users/1/posts`.
 1. Directories can contain placeholders in the form of `{foo}`. These will any URL path component. For example `https://example.com/users/1/posts` will match both `Mocks.bundle/endpoints/users/1/posts` and `Mocks.bundle/endpoints/users/{id}/posts`.
 
 **Generic mocks**
+
 Some mocks are applicable to all endpoints, for example a generic mock for a server error. Instead of duplicating such mocks in your bundle, you can place these in the `generic` folder. These mocks will then be made available for all known endpoints.
 
 ### Example
