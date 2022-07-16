@@ -14,7 +14,7 @@ public class Mocker {
 
     /// Initializes a new `Mocker`.
     /// - Parameter mocksBundle: A bundle containing network mocks.
-    internal init(mocksBundle: Bundle, baseURL: String = "") throws {
+    internal init(mocksBundle: Bundle, baseURL: String? = nil) throws {
         self.endpoints = try MocksBundle(bundle: mocksBundle, baseURL: baseURL).discoverMocks()
     }
 
@@ -24,30 +24,33 @@ public class Mocker {
 
     /// Load mocks from the given `bundle`. This will deactivate all previously activated mocks.
     /// - Parameter mocksBundle: A bundle containing network mocks.
-    public func setMocksBundle(_ mocksBundle: Bundle, baseURL: String = "") throws {
+    public func setMocksBundle(_ mocksBundle: Bundle, baseURL: String? = nil) throws {
         self.endpoints = try MocksBundle(bundle: mocksBundle, baseURL: baseURL).discoverMocks()
     }
 
-    /// Activates a predefined mock file for the given path and method.
+    /// Activates a mock file for the given path and method.
+    ///
     /// - Parameters:
-    ///   - name: The name of the mock file to activate.
-    ///   - path: The path for which to activate the mock.
+    ///   - name: The full name of the mock file to activate. For example: `get.success.200.json`.
+    ///   - path: The URL path for which to activate the mock.
     ///   - method: The HTTP method for which to activate the mock.
+    ///
     /// - Throws:
-    ///   - MockerError.mockNotFound if the mock file does not exist in the mock bundle.
+    ///   - NetworkMockerError.mockNotFound if the mock file does not exist in the mock bundle.
     public func activate(mockNamed name: String, forPath path: String, method: String) throws {
         guard let index = index(ofEndpointWithPath: path, method: method),
               let mock = endpoints[index].availableMocks.first(where: {
                   $0.id == name
               })
         else {
-            throw MockerError.mockNotFound(name: name, path: path, method: method)
+            throw NetworkMockerError.mockNotFound(name: name, path: path, method: method)
         }
 
-        endpoints[index] = endpoints[index].activated(mock: mock)
+        endpoints[index].activate(mock)
     }
 
     /// Activates a mock for the given path and method, simulating a successful network response.
+    ///
     /// - Parameters:
     ///   - path: The path for which to activate the mock.
     ///   - method: The HTTP method for which to activate the mock.
@@ -55,7 +58,7 @@ public class Mocker {
     ///   - data: The mocked HTTP response body.
     public func activate(mockForPath path: String, method: String, statusCode: Int, data: Data) throws {
         let mock = Mock(
-            id: "ad-hoc",
+            fileName: "ad-hoc",
             method: method,
             name: "ad-hoc",
             isGeneric: false,
@@ -63,7 +66,7 @@ public class Mocker {
         )
 
         if let index = index(ofEndpointWithPath: path, method: method) {
-            endpoints[index] = endpoints[index].activated(mock: mock)
+            endpoints[index].activate(mock)
         } else {
             let endpoint = Endpoint(path: path, method: method, availableMocks: [], activeMock: mock)
             endpoints.append(endpoint)
@@ -71,13 +74,14 @@ public class Mocker {
     }
 
     /// Activates a mock for the given path and method, simulating a network error.
+    ///
     /// - Parameters:
     ///   - path: The path for which to activate the mock.
     ///   - method: The HTTP method for which to activate the mock.
     ///   - error: The mocked error.
     public func activate(mockForPath path: String, method: String, networkError error: NSError) throws {
         let mock = Mock(
-            id: "ad-hoc",
+            fileName: "ad-hoc",
             method: method,
             name: "ad-hoc",
             isGeneric: false,
@@ -85,7 +89,7 @@ public class Mocker {
         )
 
         if let index = index(ofEndpointWithPath: path, method: method) {
-            endpoints[index] = endpoints[index].activated(mock: mock)
+            endpoints[index].activate(mock)
         } else {
             let endpoint = Endpoint(path: path, method: method, availableMocks: [], activeMock: mock)
             endpoints.append(endpoint)
@@ -100,13 +104,18 @@ public class Mocker {
             return
         }
 
-        endpoints[index] = endpoints[index].deactivated()
+        endpoints[index].deactivate()
     }
 
     /// Deactivates all mocking, and sets the delay to 0.
     public func reset() {
         delay = 0
-        endpoints = endpoints.map { $0.deactivated() }
+
+        endpoints = endpoints.map { endpoint in
+            var mutableEndpoint = endpoint
+            mutableEndpoint.deactivate()
+            return mutableEndpoint
+        }
     }
 }
 

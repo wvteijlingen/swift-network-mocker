@@ -22,7 +22,7 @@ extension FileManager {
             includingPropertiesForKeys: nil,
             options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants]
         ) else {
-            throw MockerError.couldNotEnumerate(url: url)
+            throw NetworkMockerError.couldNotEnumerate(url: url)
         }
         
         return AnySequence(enumerator.lazy.compactMap { $0 as? URL })
@@ -35,8 +35,6 @@ extension Array {
     }
 }
 
-extension String {
-    func capitalizedFirst() -> String {
-        return prefix(1).capitalized + dropFirst()
-    }
+extension CharacterSet {
+    static let pathSeparator = CharacterSet(charactersIn: "/")
 }

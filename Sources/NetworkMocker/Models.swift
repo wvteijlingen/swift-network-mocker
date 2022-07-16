@@ -19,36 +19,33 @@ struct Endpoint: Equatable, Identifiable {
         self.activeMock = activeMock
     }
 
-    func activated(mock: Mock) -> Self {
-        Endpoint(path: path, method: method, availableMocks: availableMocks, activeMock: mock)
+    mutating func activate(_ mock: Mock) {
+        activeMock = mock
     }
 
-    func deactivated() -> Self {
-        Endpoint(path: path, method: method, availableMocks: availableMocks, activeMock: nil)
+    mutating func deactivate() {
+        activeMock = nil
     }
 }
 
 /// A mock that exists for an endpoint.
 struct Mock: Identifiable, Equatable {
-    enum Response: Equatable {
-        case networkResponse(data: Data, statusCode: Int)
-        case networkError(error: NSError)
-    }
+    var id: String { fileName }
 
-    let id: String
+    let fileName: String
     let method: String
     let name: String
     let isGeneric: Bool
     let response: Response
 
-    var displayName: String {
-        if let statusCode = statusCode {
-            return "\(name) (\(statusCode))"
-        } else {
-            return name
-        }
+    init(fileName: String, method: String, name: String, isGeneric: Bool, response: Mock.Response) {
+        self.fileName = fileName
+        self.method = method.uppercased()
+        self.name = name
+        self.isGeneric = isGeneric
+        self.response = response
     }
-
+    
     /// The response data for this mock. If this mock respresents a network error, the data will be nil.
     var data: Data? {
         switch response {
@@ -70,9 +67,14 @@ struct Mock: Identifiable, Equatable {
     }
 }
 
-// MARK: - Errors
+extension Mock {
+    enum Response: Equatable {
+        case networkResponse(data: Data, statusCode: Int)
+        case networkError(error: NSError)
+    }
+}
 
-enum MockerError: Error, LocalizedError {
+enum NetworkMockerError: Error, LocalizedError {
     case invalidFileName(url: URL)
     case couldNotEnumerate(url: URL)
     case couldNotLoadFile(url: URL)
@@ -91,11 +93,3 @@ enum MockerError: Error, LocalizedError {
         }
     }
 }
-
-// MARK: - Built-in Mocks
-
-//extension Mock {
-//    static let networkTimeout = Mock(
-//        id: "get.networkTimeout",
-//        method: <#T##String#>, name: <#T##String#>, isGeneric: <#T##Bool#>, response: <#T##Response#>)
-//}

@@ -1,13 +1,20 @@
 import Foundation
+import Combine
 
 class EndpointsViewModel: ObservableObject {
-    let mocker: Mocker
-
-    var delay: TimeInterval { mocker.delay }
+    @Published var delay: TimeInterval
     var endpoints: [Endpoint] { mocker.endpoints }
+
+    private let mocker: Mocker
+    private var cancellables = Set<AnyCancellable>()
 
     init(mocker: Mocker) {
         self.mocker = mocker
+        self.delay = mocker.delay
+
+        self.$delay.sink { delay in
+            self.mocker.delay = delay
+        }.store(in: &cancellables)
     }
     
     func activate(mockNamed name: String, for endpoint: Endpoint) {

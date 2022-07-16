@@ -2,19 +2,23 @@ import SwiftUI
 
 public struct EndpointsView: View {
     @ObservedObject private var viewModel: EndpointsViewModel
-    
+
     public init(mocker: Mocker = Mocker.shared) {
         viewModel = EndpointsViewModel(mocker: mocker)
     }
-    
+
     public var body: some View {
         List {
-            Section {
+            Section(header: Text("Response Delay")) {
+                Stepper(value: $viewModel.delay, step: 0.5) {
+                    Text(viewModel.delay.formatted() + " seconds")
+                }
+            }
+
+            Section(header: Text("Endpoints")) {
                 ForEach(viewModel.endpoints)  { endpoint in
                     EndpointRow(viewModel: viewModel, endpoint: endpoint)
                 }
-            } footer: {
-                Text("Simulated delay: \(viewModel.delay) seconds")
             }
         }
         .listStyle(GroupedListStyle())
@@ -27,20 +31,20 @@ public struct EndpointsView: View {
 
 private struct EndpointRow: View {
     @ObservedObject private var viewModel: EndpointsViewModel
-    
+
     private let endpoint: Endpoint
     private var selectionBinding: Binding<String>
-    
+
     init(viewModel: EndpointsViewModel, endpoint: Endpoint) {
         self.viewModel = viewModel
         self.endpoint = endpoint
-        
+
         self.selectionBinding = Binding<String>(
             get: { endpoint.activeMock?.id ?? "nil" },
             set: { viewModel.activate(mockNamed: $0, for: endpoint) }
         )
     }
-    
+
     var body: some View {
         HStack {
             Text(endpoint.method.uppercased())
@@ -68,10 +72,20 @@ private struct EndpointRow: View {
                     }
                 }
             } label: {
-                Text(endpoint.activeMock?.name ?? "None")
+                Text(endpoint.activeMock?.displayName ?? "None")
             }
-            .accentColor(endpoint.activeMock == nil ? .gray : .blue)
-            .pickerStyle(.menu)
+        }
+        .accentColor(endpoint.activeMock == nil ? .gray : .blue)
+        .pickerStyle(.menu)
+    }
+}
+
+private extension Mock {
+    var displayName: String {
+        if let statusCode = statusCode {
+            return "\(name) (\(statusCode))"
+        } else {
+            return name
         }
     }
 }

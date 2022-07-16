@@ -15,23 +15,23 @@ final class NetworkMockerTests: XCTestCase {
   func test_endpoints_containsDiscoveredEndpoints() throws {
     let expected = [
       Endpoint(path: "/users", method: "GET", availableMocks: [
-        Mock(id: "get.success.200.json", method: "GET", name: "success", isGeneric: false, response: .networkResponse(data: mock("endpoints/users/get.success.200.json"), statusCode: 200)),
-        Mock(id: "get.serverError.500.json", method: "GET", name: "serverError", isGeneric: true, response: .networkResponse(data: mock("generic/get.serverError.500.json"), statusCode: 500)),
-        Mock(id: "any.notFound.404.json", method: "ANY", name: "notFound", isGeneric: true, response: .networkResponse(data: mock("generic/any.notFound.404.json"), statusCode: 404))
+        Mock(fileName: "get.success.200.json", method: "GET", name: "success", isGeneric: false, response: .networkResponse(data: mock("endpoints/users/get.success.200.json"), statusCode: 200)),
+        Mock(fileName: "any.notFound.404.json", method: "ANY", name: "notFound", isGeneric: true, response: .networkResponse(data: mock("generic/any.notFound.404.json"), statusCode: 404)),
+        Mock(fileName: "get.serverError.500.json", method: "GET", name: "serverError", isGeneric: true, response: .networkResponse(data: mock("generic/get.serverError.500.json"), statusCode: 500))
       ]),
       Endpoint(path: "/users", method: "POST", availableMocks: [
-        Mock(id: "post.success.202.json", method: "POST", name: "success", isGeneric: false, response: .networkResponse(data: mock("endpoints/users/post.success.202.json"), statusCode: 202)),
-        Mock(id: "any.notFound.404.json", method: "ANY", name: "notFound", isGeneric: true, response: .networkResponse(data: mock("generic/any.notFound.404.json"), statusCode: 404))
+        Mock(fileName: "post.success.202.json", method: "POST", name: "success", isGeneric: false, response: .networkResponse(data: mock("endpoints/users/post.success.202.json"), statusCode: 202)),
+        Mock(fileName: "any.notFound.404.json", method: "ANY", name: "notFound", isGeneric: true, response: .networkResponse(data: mock("generic/any.notFound.404.json"), statusCode: 404))
       ]),
       Endpoint(path: "/users/0", method: "GET", availableMocks: [
-        Mock(id: "get.notFound.404.json", method: "GET", name: "notFound", isGeneric: false, response: .networkResponse(data: mock("endpoints/users/0/get.notFound.404.json"), statusCode: 404)),
-        Mock(id: "get.serverError.500.json", method: "GET", name: "serverError", isGeneric: true, response: .networkResponse(data: mock("generic/get.serverError.500.json"), statusCode: 500)),
-        Mock(id: "any.notFound.404.json", method: "ANY", name: "notFound", isGeneric: true, response: .networkResponse(data: mock("generic/any.notFound.404.json"), statusCode: 404))
+        Mock(fileName: "get.notFound.404.json", method: "GET", name: "notFound", isGeneric: false, response: .networkResponse(data: mock("endpoints/users/0/get.notFound.404.json"), statusCode: 404)),
+        Mock(fileName: "any.notFound.404.json", method: "ANY", name: "notFound", isGeneric: true, response: .networkResponse(data: mock("generic/any.notFound.404.json"), statusCode: 404)),
+        Mock(fileName: "get.serverError.500.json", method: "GET", name: "serverError", isGeneric: true, response: .networkResponse(data: mock("generic/get.serverError.500.json"), statusCode: 500)),
       ]),
       Endpoint(path: "/users/{id}", method: "GET", availableMocks: [
-        Mock(id: "get.success.200.json", method: "GET", name: "success", isGeneric: false, response: .networkResponse(data: mock("endpoints/users/{id}/get.success.200.json"), statusCode: 200)),
-        Mock(id: "get.serverError.500.json", method: "GET", name: "serverError", isGeneric: true, response: .networkResponse(data: mock("generic/get.serverError.500.json"), statusCode: 500)),
-        Mock(id: "any.notFound.404.json", method: "ANY", name: "notFound", isGeneric: true, response: .networkResponse(data: mock("generic/any.notFound.404.json"), statusCode: 404))
+        Mock(fileName: "get.success.200.json", method: "GET", name: "success", isGeneric: false, response: .networkResponse(data: mock("endpoints/users/{id}/get.success.200.json"), statusCode: 200)),
+        Mock(fileName: "any.notFound.404.json", method: "ANY", name: "notFound", isGeneric: true, response: .networkResponse(data: mock("generic/any.notFound.404.json"), statusCode: 404)),
+        Mock(fileName: "get.serverError.500.json", method: "GET", name: "serverError", isGeneric: true, response: .networkResponse(data: mock("generic/get.serverError.500.json"), statusCode: 500)),
       ])
     ]
 
