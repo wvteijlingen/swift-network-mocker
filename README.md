@@ -72,11 +72,11 @@ Mocks.bundle
       |   | get.ok.200.json
       |   | get.empty.200.json
       |
-      | users/{id}
-      |   | get.ok.200.json
-      |
       | users/0
       |   | get.notFound.404.json
+      |
+      | users/{id}
+      |   | get.ok.200.json
       |
       | users/{id}/posts
       |   | get.ok.200.json
